@@ -13,8 +13,7 @@
     "./assetpack": {
       "import": "./dist/assetpack.js",
       "types": "./dist/assetpack.d.ts"
-    },
-    "./tsconfig.base.json": "./infra/shared/tsconfig.base.json"
+    }
   },
   "files": [
     "dist",
