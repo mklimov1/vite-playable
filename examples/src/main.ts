@@ -5,7 +5,7 @@ import heroImg from "./assets/hero.png";
 // after build the <img> src must resolve from the base64 asset map, not a file.
 const app = document.querySelector<HTMLDivElement>("#app")!;
 app.innerHTML = `
-  <h1>vite-game-forge example</h1>
+  <h1>vite-playable example</h1>
   <img src="${heroImg}" width="170" height="179" alt="hero" />
   <button id="counter" type="button">count is 0</button>
 `;

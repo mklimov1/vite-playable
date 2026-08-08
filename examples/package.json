@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@mklimov1/vite-game-forge": "file:..",
+    "@mklimov1/vite-playable": "file:..",
     "typescript": "~5.9.3",
     "vite": "^8.2.1"
   }
