@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "type": "module",
   "bin": {
-    "infra-init": "./dist/cli/init.js"
+    "infra-init": "dist/cli/init.js"
   },
   "exports": {
     ".": {
