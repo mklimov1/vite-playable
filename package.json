@@ -23,8 +23,12 @@
   "scripts": {
     "build": "tsup src/index.ts src/assetpack.ts src/cli/init.ts --format esm --dts --external @assetpack/core --external vite-plugin-singlefile --external vite-plugin-zip-pack",
     "link": "npm run build && npm link",
+    "example": "npm run build && npm -w example run build:inline",
     "test": "npm run build && node --test"
   },
+  "workspaces": [
+    "examples"
+  ],
   "devDependencies": {
     "@assetpack/core": "^1.7.0",
     "@types/node": "^26.2.0",
