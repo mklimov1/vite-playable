@@ -1,4 +1,4 @@
-# @mklimov1/vite-game-forge
+# @mklimov1/vite-playable
 
 Vite config toolkit for building playable ads: per-network presets, single-file
 inlining, asset zipping, size reporting, and shared infra configs (Biome +
@@ -7,7 +7,7 @@ TypeScript).
 ## Install
 
 ```bash
-npm i -D @mklimov1/vite-game-forge
+npm i -D @mklimov1/vite-playable
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ npm i -D @mklimov1/vite-game-forge
 ```ts
 // vite.config.ts
 import { defineConfig } from "vite";
-import { playableConfig } from "@mklimov1/vite-game-forge";
+import { playableConfig } from "@mklimov1/vite-playable";
 
 export default defineConfig(({ mode }) => playableConfig({ network: mode }));
 ```
@@ -43,11 +43,11 @@ npm i -D @assetpack/core
 
 ```ts
 import { defineConfig } from "vite";
-import { playableConfig } from "@mklimov1/vite-game-forge";
+import { playableConfig } from "@mklimov1/vite-playable";
 import {
   assetpackPlugin,
   playablePipesConfig,
-} from "@mklimov1/vite-game-forge/assetpack";
+} from "@mklimov1/vite-playable/assetpack";
 
 export default defineConfig(({ mode }) =>
   playableConfig({
