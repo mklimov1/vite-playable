@@ -1,5 +1,8 @@
-import { networkConfigMap, type NetworkName } from "../networkConfigs";
+import { networkConfigMap } from "../networkConfigs";
+import type { NetworkConfig } from "../types/networkConfig";
 
-export const resolveNetwork = (name: NetworkName = "develop") => {
-  return networkConfigMap[name] ?? networkConfigMap.develop;
-};
+// Accepts any string (e.g. Vite's `mode`) and falls back to `develop` for
+// unknown networks, so consumers don't have to cast in vite.config.ts.
+export const resolveNetwork = (name: string = "develop"): NetworkConfig =>
+  (networkConfigMap as Record<string, NetworkConfig>)[name] ??
+  networkConfigMap.develop;

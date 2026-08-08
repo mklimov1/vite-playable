@@ -19,14 +19,14 @@ export const generateAssetTypes = async ({
 
     const bundles = manifest.bundles
       .map(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // biome-ignore lint/suspicious/noExplicitAny: manifest bundle shape is dynamic
         (b: any) => `  "${b.name.toUpperCase()}": "${b.name}"`,
       )
       .join(",\n");
 
     const assetKeys = new Set<string>();
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: manifest bundle shape is dynamic
     manifest.bundles.forEach((b: any) =>
       Object.keys(b.assets).forEach((key) => assetKeys.add(key)),
     );
@@ -42,7 +42,7 @@ export const generateAssetTypes = async ({
       "export type AssetName = keyof typeof Assets;\n";
 
     await fs.writeFile(absOutputPath, tsContent, "utf-8");
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: build-time progress log
     console.log("✅ [assetpack] Generated asset type definitions.");
   } catch (err) {
     console.error("❌ Failed to generate asset types:", err);
