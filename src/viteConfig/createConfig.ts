@@ -9,7 +9,7 @@ export interface ConfigOptions {
   port?: number;
 }
 
-export const createConfig = (options: ConfigOptions) => {
+export const createConfig = (options: ConfigOptions = {}) => {
   const { plugins = [], outDir = "dist", port = 3000, alias } = options;
 
   return {
