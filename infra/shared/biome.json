@@ -23,14 +23,19 @@
     "enabled": true,
     "rules": {
       "preset": "recommended",
+      "complexity": {
+        "noStaticOnlyClass": "off"
+      },
       "style": {
-        "useTemplate": "error"
+        "useTemplate": "error",
+        "noNonNullAssertion": "off"
       },
       "suspicious": {
         "noConsole": {
           "level": "warn",
           "options": { "allow": ["warn", "error"] }
-        }
+        },
+        "useIterableCallbackReturn": "off"
       }
     }
   }
