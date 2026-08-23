@@ -1,48 +1,69 @@
 import fs from "fs/promises";
 import path from "path";
 
+// Minimal shape of a pixi manifest — only what this generator reads.
+interface Manifest {
+  bundles: { name: string; assets: { alias: string | string[] }[] }[];
+}
+
+// A pixi manifest entry lists the same asset under several alias forms
+// (with/without folder path, with/without extension). Pick the canonical one:
+// the longest alias without a file extension.
+const hasExtension = (alias: string) => /\.[^/.]+$/.test(alias);
+
+const pickAlias = (alias: string | string[]): string => {
+  const all = Array.isArray(alias) ? alias : [alias];
+  const withoutExt = all.filter((a) => !hasExtension(a));
+  const pool = withoutExt.length ? withoutExt : all;
+
+  return pool.reduce((longest, a) => (a.length > longest.length ? a : longest));
+};
+
 export const generateAssetTypes = async ({
   manifestPath = "src/shared/generated/manifest.json",
   outputPath = "src/shared/generated/index.ts",
 }: {
   manifestPath?: string;
   outputPath?: string;
-}) => {
+} = {}) => {
   try {
-    const absManifestPath = path.resolve(manifestPath);
-
-    const absOutputPath = path.resolve(outputPath);
-
-    const content = await fs.readFile(absManifestPath, "utf-8");
-
-    const manifest = JSON.parse(content);
-
-    const bundles = manifest.bundles
-      .map(
-        // biome-ignore lint/suspicious/noExplicitAny: manifest bundle shape is dynamic
-        (b: any) => `  "${b.name.toUpperCase()}": "${b.name}"`,
-      )
-      .join(",\n");
-
-    const assetKeys = new Set<string>();
-
-    // biome-ignore lint/suspicious/noExplicitAny: manifest bundle shape is dynamic
-    manifest.bundles.forEach((b: any) =>
-      Object.keys(b.assets).forEach((key) => assetKeys.add(key)),
+    const manifest: Manifest = JSON.parse(
+      await fs.readFile(path.resolve(manifestPath), "utf-8"),
     );
 
-    const assets = [...assetKeys].map((k) => `  "${k}": "${k}"`).join(",\n");
+    const bundles = manifest.bundles
+      .map((b) => `  "${b.name.toUpperCase()}": "${b.name}"`)
+      .join(",\n");
 
-    const tsContent =
-      "// 🚨 AUTO-GENERATED — DO NOT EDIT\n" +
-      "// Generated from manifest.json\n\n" +
-      `export const Bundles = {\n${bundles}\n} as const;\n\n` +
-      `export const Assets = {\n${assets}\n} as const;\n\n` +
-      "export type BundleName = keyof typeof Bundles;\n" +
-      "export type AssetName = keyof typeof Assets;\n";
+    const aliases = new Set<string>();
 
-    await fs.writeFile(absOutputPath, tsContent, "utf-8");
-    // biome-ignore lint/suspicious/noConsole: build-time progress log
+    for (const bundle of manifest.bundles) {
+      for (const entry of bundle.assets) {
+        aliases.add(pickAlias(entry.alias));
+      }
+    }
+
+    const assets = [...aliases]
+      .sort()
+      .map((a) => `  "${a}": "${a}"`)
+      .join(",\n");
+
+    const tsContent = `// 🚨 AUTO-GENERATED — DO NOT EDIT
+// Generated from manifest.json
+
+export const Bundles = {
+${bundles}
+} as const;
+
+export const Assets = {
+${assets}
+} as const;
+
+export type BundleName = keyof typeof Bundles;
+export type AssetName = keyof typeof Assets;
+`;
+
+    await fs.writeFile(path.resolve(outputPath), tsContent, "utf-8");
     console.log("✅ [assetpack] Generated asset type definitions.");
   } catch (err) {
     console.error("❌ Failed to generate asset types:", err);
