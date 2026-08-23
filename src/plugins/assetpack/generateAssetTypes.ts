@@ -32,7 +32,7 @@ export const generateAssetTypes = async ({
     );
 
     const bundles = manifest.bundles
-      .map((b) => `  "${b.name.toUpperCase()}": "${b.name}"`)
+      .map((b) => `  "${b.name}": "${b.name}"`)
       .join(",\n");
 
     const aliases = new Set<string>();
@@ -51,16 +51,16 @@ export const generateAssetTypes = async ({
     const tsContent = `// 🚨 AUTO-GENERATED — DO NOT EDIT
 // Generated from manifest.json
 
-export const Bundles = {
+export const BundleKeys = {
 ${bundles}
 } as const;
 
-export const Assets = {
+export const AssetKeys = {
 ${assets}
 } as const;
 
-export type BundleName = keyof typeof Bundles;
-export type AssetName = keyof typeof Assets;
+export type BundleName = keyof typeof BundleKeys;
+export type AssetName = keyof typeof AssetKeys;
 `;
 
     await fs.writeFile(path.resolve(outputPath), tsContent, "utf-8");
