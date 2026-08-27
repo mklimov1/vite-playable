@@ -1,6 +1,6 @@
 {
   "name": "@mklimov1/vite-playable",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "type": "module",
   "bin": {
     "infra-init": "dist/cli/init.js"
